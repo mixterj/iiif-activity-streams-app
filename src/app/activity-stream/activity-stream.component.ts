@@ -41,26 +41,26 @@ export class ActivityStreamComponent implements OnInit {
           this.jsonData['@context'] = [];
           this.jsonData['@context'].push('http://iiif.io/api/presentation/3/context.json');
           this.jsonData['@context'].push('https://www.w3.org/ns/activitystreams');
-          this.jsonData['id'] = 'http://localhost:4200/activity_stream';
+          this.jsonData['id'] = 'http://localhost:3071/activity_stream';
           this.jsonData['type'] = 'Collection';
           this.jsonData['label'] = 'CONTENTdm IIIF Collections';
           this.jsonData['first'] = {};
-          this.jsonData['first']['id'] = 'http://localhost:4200/activity_stream/1';
+          this.jsonData['first']['id'] = 'http://localhost:3071/activity_stream/1';
           this.jsonData['first']['type'] = 'CollectionPage';
-          var url = 'http://sanmateo-32.dev.oclc.org:9200/activity_streams/_stats';
+          var url = 'http://localhost:9200/activity_streams/_stats';
           this.httpService.getJson(url).then(data => {
               this.jsonData['total'] = data['_all']['primaries']['docs']['count'];
               var last = this.jsonData['total'] / 500;
               if (last % 1 != 0){
                   var lastPage = Math.floor(last + 1);
                   this.jsonData['last'] = {};
-                  this.jsonData['last']['id'] = 'http://localhost:4200/activity_stream/'+lastPage;
+                  this.jsonData['last']['id'] = 'http://localhost:3071/activity_stream/'+lastPage;
                   this.jsonData['last']['type'] = 'CollectionPage';
               }
               else{
                   var lastPage = Math.floor(last);
                   this.jsonData['last'] = {};
-                  this.jsonData['last']['id'] = 'http://localhost:4200/activity_stream/'+last;
+                  this.jsonData['last']['id'] = 'http://localhost:3071/activity_stream/'+last;
                   this.jsonData['last']['type'] = 'CollectionPage'; 
               }
               console.log(last)
@@ -74,7 +74,7 @@ export class ActivityStreamComponent implements OnInit {
           else {
               var startingItem = this.page * 500 + 1; 
           }
-          var url = 'http://52.204.112.237:3061/?action=range_search&fromDate=2017-10-10&toDate=2017-11-04&size=500&from=' + startingItem;
+          var url = 'http://52.204.112.237:3061/?action=search&size=500&from=' + startingItem;
           console.log(url);
           this.httpService.getJson(url).then(data => {
              this.jsonData = data; 
