@@ -15,23 +15,6 @@ export class ActivityStreamComponent implements OnInit {
   ) { }
   jsonData = {};
   page = null;
-  test = {
-      "@context": [
-          "http://iiif.io/api/presentation/3/context.json",
-          "https://www.w3.org/ns/activitystreams"],
-      "id": "https://data.getty.edu/iiif/discovery.json",
-      "type": "Collection",
-      "label": "Example Big Collection",
-      "total": 33000,
-      "first": {
-          "id": "https://data.getty.edu/iiif/discovery-1.json",
-          "type": "CollectionPage"
-      },
-      "last": {
-          "id": "https://data.getty.edu/iiif/discovery-10.json",
-          "type": "CollectionPage"
-      }
-  }
 
   ngOnInit() {
       this.page = this.route.snapshot.paramMap.get('id');
@@ -77,7 +60,12 @@ export class ActivityStreamComponent implements OnInit {
           var url = 'http://52.204.112.237:3061/?action=search&size=500&from=' + startingItem;
           console.log(url);
           this.httpService.getJson(url).then(data => {
-             this.jsonData = data; 
+             this.jsonData = data;
+             //this.jsonData['type'] = 'CollectionPage';
+             this.jsonData['partOf'] = 'http://52.204.112.237/iiif_activity_streams/activity_stream/';
+             this.jsonData['next'] = {};
+             this.jsonData['next']['type'] = 'CollectionPage';
+             this.jsonData['next']['type'] = this.page + 1;
           });
       }
   }
